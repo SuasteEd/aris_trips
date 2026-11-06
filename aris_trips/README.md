@@ -33,10 +33,10 @@ La llave `service_role` nunca se usa en la app ni se guarda en el repositorio.
 
 ```sh
 cd apps/admin
-cp env.example.json env.json    # llenar SUPABASE_URL y SUPABASE_ANON_KEY (llave publishable)
+cp .env.example .env            # llenar SUPABASE_URL y SUPABASE_ANON_KEY (llave publishable)
 flutter pub get
 dart run build_runner build -d
-flutter run --dart-define-from-file=env.json   # en VS Code: "Aris Admin (debug)" en Run and Debug
+flutter run --dart-define-from-file=.env   # en VS Code: "Aris Admin (debug)" en Run and Debug
 ```
 
 Verificación:

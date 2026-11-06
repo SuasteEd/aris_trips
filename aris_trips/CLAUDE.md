@@ -121,14 +121,12 @@ El enlace compartido es `{WEB_BASE_URL}/v/{token}`.
 
 ## Configuración
 
-Usa `--dart-define-from-file=env.json`. `env.json` queda fuera de Git y se incluye `env.example.json`:
+Usa `--dart-define-from-file=.env`. `.env` queda fuera de Git y se incluye `.env.example`:
 
-```json
-{
-  "SUPABASE_URL": "http://10.0.2.2:54321",
-  "SUPABASE_ANON_KEY": "",
-  "WEB_BASE_URL": "http://localhost:3000"
-}
+```env
+SUPABASE_URL=http://10.0.2.2:54321
+SUPABASE_ANON_KEY=
+WEB_BASE_URL=http://localhost:3000
 ```
 
 ## Pantallas de la app

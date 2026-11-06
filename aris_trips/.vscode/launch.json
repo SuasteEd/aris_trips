@@ -7,7 +7,7 @@
       "request": "launch",
       "cwd": "apps/admin",
       "program": "lib/main.dart",
-      "toolArgs": ["--dart-define-from-file=env.json"]
+      "toolArgs": ["--dart-define-from-file=.env"]
     },
     {
       "name": "Aris Admin (profile)",
@@ -16,7 +16,7 @@
       "cwd": "apps/admin",
       "program": "lib/main.dart",
       "flutterMode": "profile",
-      "toolArgs": ["--dart-define-from-file=env.json"]
+      "toolArgs": ["--dart-define-from-file=.env"]
     }
   ]
 }

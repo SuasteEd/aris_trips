@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../widgets/state_views.dart';
 
-/// Shown instead of a blank screen when the app was built without env.json.
+/// Shown instead of a blank screen when the app was built without .env.
 class ConfigErrorApp extends StatelessWidget {
   const ConfigErrorApp({super.key, required this.missing});
 
@@ -19,7 +19,7 @@ class ConfigErrorApp extends StatelessWidget {
           title: 'Falta la configuración',
           message:
               'Variables vacías: ${missing.join(', ')}.\n'
-              'Ejecuta la app con --dart-define-from-file=env.json.',
+              'Ejecuta la app con --dart-define-from-file=.env.',
         ),
       ),
     );

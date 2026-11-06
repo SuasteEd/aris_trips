@@ -13,7 +13,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.textContaining('--dart-define-from-file=env.json'),
+      find.textContaining('--dart-define-from-file=.env'),
       findsOneWidget,
     );
   });

@@ -1,4 +1,4 @@
-/// Compile-time configuration from `--dart-define-from-file=env.json`.
+/// Compile-time configuration from `--dart-define-from-file=.env`.
 class Env {
   const Env({
     required this.supabaseUrl,
@@ -34,7 +34,7 @@ class Env {
     if (!isValid) {
       throw StateError(
         'Missing or invalid configuration: ${problems.join(', ')}. '
-        'Run with --dart-define-from-file=env.json.',
+        'Run with --dart-define-from-file=.env.',
       );
     }
   }
