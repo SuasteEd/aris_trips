@@ -213,9 +213,16 @@ class _LodgingCard extends StatelessWidget {
 }
 
 class ItineraryTab extends StatelessWidget {
-  const ItineraryTab({super.key, required this.tripId});
+  const ItineraryTab({
+    super.key,
+    required this.tripId,
+    this.audience = const {},
+  });
 
   final String tripId;
+
+  /// Booking id → passenger name, for items of a single passenger.
+  final Map<String, String> audience;
 
   Future<void> _open(BuildContext context, [ItineraryItem? item]) =>
       _openForm<ItineraryFormCubit>(
@@ -226,6 +233,7 @@ class ItineraryTab extends StatelessWidget {
         page: ItineraryFormPage(
           original: item,
           initial: ItineraryDraft(timezone: _suggestedZone(context)),
+          audience: audience,
         ),
       );
 
@@ -235,7 +243,7 @@ class ItineraryTab extends StatelessWidget {
       addLabel: 'Agregar actividad',
       emptyIcon: Icons.event_note_outlined,
       emptyTitle: 'Sin actividades',
-      emptyMessage: 'Agrega las actividades del grupo, día por día.',
+      emptyMessage: 'Agrega las actividades del viaje, día por día.',
       deleteTitle: '¿Eliminar esta actividad?',
       deleteMessage: 'Se quitará del itinerario del grupo.',
       onAdd: () => _open(context),
@@ -261,6 +269,9 @@ class ItineraryTab extends StatelessWidget {
           widgets.add(
             _ItineraryCard(
               item: item,
+              audienceName: item.bookingId == null
+                  ? null
+                  : audience[item.bookingId] ?? 'un pasajero',
               onEdit: () => _open(context, item),
               onDelete: () => onDelete(item),
             ),
@@ -275,11 +286,15 @@ class ItineraryTab extends StatelessWidget {
 class _ItineraryCard extends StatelessWidget {
   const _ItineraryCard({
     required this.item,
+    required this.audienceName,
     required this.onEdit,
     required this.onDelete,
   });
 
   final ItineraryItem item;
+
+  /// Null for group items.
+  final String? audienceName;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
@@ -306,6 +321,13 @@ class _ItineraryCard extends StatelessWidget {
           style: theme.textTheme.labelLarge,
         ),
         Text(item.title, style: theme.textTheme.titleMedium),
+        if (audienceName case final name?)
+          Text(
+            'Solo para $name',
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.primary,
+            ),
+          ),
         if (location != null) Text(location, style: muted),
         if (description != null) ...[
           const SizedBox(height: AppSpacing.xs),

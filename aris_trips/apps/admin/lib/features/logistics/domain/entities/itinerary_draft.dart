@@ -12,7 +12,8 @@ enum ItineraryDraftIssue {
   endBeforeStart,
 }
 
-/// Group itinerary item as typed by the admin; the end is optional.
+/// Itinerary item as typed by the admin; the end is optional. A null
+/// [bookingId] means the whole group.
 @freezed
 abstract class ItineraryDraft with _$ItineraryDraft {
   const factory ItineraryDraft({
@@ -22,6 +23,7 @@ abstract class ItineraryDraft with _$ItineraryDraft {
     @Default(TimeZones.defaultZone) String timezone,
     @Default('') String location,
     @Default('') String description,
+    String? bookingId,
   }) = _ItineraryDraft;
 
   const ItineraryDraft._();

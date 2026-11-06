@@ -13,10 +13,18 @@ typedef ItineraryFormState = ItemFormState<ItineraryItem, ItineraryDraftIssue>;
 
 /// Expects a configured [ItineraryFormCubit]. Pops `true` when saved.
 class ItineraryFormPage extends StatefulWidget {
-  const ItineraryFormPage({super.key, this.original, this.initial});
+  const ItineraryFormPage({
+    super.key,
+    this.original,
+    this.initial,
+    this.audience = const {},
+  });
 
   final ItineraryItem? original;
   final ItineraryDraft? initial;
+
+  /// Booking id → passenger name, for items of a single passenger.
+  final Map<String, String> audience;
 
   @override
   State<ItineraryFormPage> createState() => _ItineraryFormPageState();
@@ -75,6 +83,23 @@ class _ItineraryFormPageState extends State<ItineraryFormPage> {
                 labelText: 'Título',
                 errorText: error(ItineraryDraftIssue.titleRequired),
               ),
+            ),
+            DropdownButtonFormField<String?>(
+              key: const Key('itinerary_audience'),
+              initialValue: widget.audience.containsKey(_draft.bookingId)
+                  ? _draft.bookingId
+                  : null,
+              decoration: const InputDecoration(labelText: 'Para'),
+              items: [
+                const DropdownMenuItem(child: Text('Todo el grupo')),
+                for (final MapEntry(key: id, value: name)
+                    in widget.audience.entries)
+                  DropdownMenuItem(value: id, child: Text(name)),
+              ],
+              onChanged: submitting
+                  ? null
+                  : (id) =>
+                        setState(() => _draft = _draft.copyWith(bookingId: id)),
             ),
             TimeZoneField(
               key: const Key('itinerary_tz'),

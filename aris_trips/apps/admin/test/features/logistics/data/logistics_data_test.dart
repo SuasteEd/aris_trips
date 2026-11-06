@@ -67,9 +67,15 @@ void main() {
       expect(json['address'], isNull);
     });
 
-    test('itinerary payload keeps group items without booking', () {
+    test('itinerary payload: null booking means the whole group', () {
       final json = ItineraryItemModel.draftToJson(validItineraryDraft);
-      expect(json.containsKey('booking_id'), isFalse);
+      expect(json['booking_id'], isNull);
+      expect(
+        ItineraryItemModel.draftToJson(
+          validItineraryDraft.copyWith(bookingId: 'b1'),
+        )['booking_id'],
+        'b1',
+      );
       expect(json['ends_at'], isNull);
       expect(json['starts_at'], '2027-03-21T14:00:00.000Z');
     });

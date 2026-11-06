@@ -34,6 +34,7 @@ abstract class ItineraryItem with _$ItineraryItem {
       timezone: timezone,
       location: location ?? '',
       description: description ?? '',
+      bookingId: bookingId,
     );
   }
 }

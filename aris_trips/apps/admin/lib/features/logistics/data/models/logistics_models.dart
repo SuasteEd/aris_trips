@@ -145,7 +145,8 @@ abstract class ItineraryItemModel with _$ItineraryItemModel {
       'id, trip_id, booking_id, starts_at, ends_at, timezone, title, '
       'description, location';
 
-  /// Group items only for now: booking_id stays null.
+  /// A null booking_id makes the item apply to the whole group. The database
+  /// rejects a booking from another trip.
   static Map<String, dynamic> draftToJson(ItineraryDraft draft) {
     assert(draft.isValid, 'Only valid drafts reach the data layer');
     const instant = InstantConverter();
@@ -157,6 +158,7 @@ abstract class ItineraryItemModel with _$ItineraryItemModel {
       'title': draft.title,
       'description': _blankToNull(draft.description),
       'location': _blankToNull(draft.location),
+      'booking_id': draft.bookingId,
     };
   }
 
