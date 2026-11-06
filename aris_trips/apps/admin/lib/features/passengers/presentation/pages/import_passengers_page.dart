@@ -27,9 +27,11 @@ class ImportPassengersPage extends StatelessWidget {
             title: result.total == 1
                 ? '1 pasajero importado'
                 : '${result.total} pasajeros importados',
-            message: result.reused == 0
-                ? null
-                : '${result.reused} ya existían y se reutilizaron.',
+            message: switch (result.reused) {
+              0 => null,
+              1 => '1 ya existía y se reutilizó.',
+              final reused => '$reused ya existían y se reutilizaron.',
+            },
             action: FilledButton(
               onPressed: () => context.pop(),
               child: const Text('Listo'),
