@@ -14,7 +14,7 @@ Sistema para que una agencia administre viajes y sus pasajeros consulten vuelos,
 - Antes de un hito, presenta un plan breve. Pregunta solo si una decisión cambia el modelo de datos o la seguridad.
 - Haz commits pequeños con Conventional Commits. No hagas push.
 - No agregues funciones fuera del hito actual ni dependencias sin justificarlas.
-- Un hito está terminado cuando pasan `flutter analyze`, `flutter test` y `supabase test db`.
+- Un hito está terminado cuando pasan `flutter analyze`, `flutter test` y `supabase/scripts/test-db.sh` (pgTAP contra el proyecto vinculado, sin Docker).
 
 ## Estructura del repositorio
 
@@ -27,6 +27,7 @@ Sistema para que una agencia administre viajes y sus pasajeros consulten vuelos,
 └── supabase/
     ├── config.toml
     ├── migrations/
+    ├── scripts/            # test-db.sh: corre pgTAP sin Docker
     ├── seed.sql
     └── tests/              # Pruebas pgTAP
 ```

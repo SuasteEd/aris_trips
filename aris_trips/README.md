@@ -17,8 +17,10 @@ supabase login
 supabase link --project-ref <ref>
 supabase db push --dry-run      # revisar
 supabase db push --include-seed # aplicar migraciones y datos de ejemplo
-supabase test db --linked       # pruebas pgTAP (corren en transacción y no dejan datos)
+supabase/scripts/test-db.sh     # pruebas pgTAP
 ```
+
+`supabase test db` necesita Docker para ejecutar `pg_prove`, así que se usa `supabase/scripts/test-db.sh`. El script manda cada archivo de `supabase/tests` con `supabase db query --linked`, lo ejecuta dentro de una subtransacción que siempre se deshace (no deja datos) e imprime la salida TAP. Termina con código 1 si alguna prueba falla o si el número de pruebas no coincide con el plan. Para correr solo algunas pruebas, pasa los archivos como argumentos.
 
 Configuración del proyecto en el panel:
 
