@@ -66,14 +66,14 @@ abstract final class AppTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          minimumSize: const Size.fromHeight(AppSpacing.xxl),
+          minimumSize: const Size(AppSpacing.xxl, AppSpacing.xxl),
           shape: rounded,
           textStyle: textTheme.labelLarge,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          minimumSize: const Size.fromHeight(AppSpacing.xxl),
+          minimumSize: const Size(AppSpacing.xxl, AppSpacing.xxl),
           shape: rounded,
           textStyle: textTheme.labelLarge,
         ),
