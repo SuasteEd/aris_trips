@@ -1,4 +1,9 @@
 import 'package:aris_admin/core/error/failure.dart';
+import 'package:aris_admin/core/time/time_zones.dart';
+import 'package:aris_admin/features/logistics/domain/entities/flight.dart';
+import 'package:aris_admin/features/logistics/domain/entities/itinerary_item.dart';
+import 'package:aris_admin/features/logistics/domain/entities/lodging.dart';
+import 'package:aris_admin/features/logistics/presentation/cubit/items_cubit.dart';
 import 'package:aris_admin/features/trips/domain/entities/trip_status.dart';
 import 'package:aris_admin/features/trips/presentation/cubit/trip_detail_cubit.dart';
 import 'package:aris_admin/features/trips/presentation/pages/trip_detail_page.dart';
@@ -8,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../../helpers/logistics_fakes.dart';
 import '../../../helpers/pump_app.dart';
 import '../../../helpers/trips_fakes.dart';
 
@@ -16,6 +22,7 @@ void main() {
 
   setUpAll(() async {
     registerTripsFallbacks();
+    TimeZones.ensureInitialized();
     await initFormatting();
   });
 
@@ -26,13 +33,29 @@ void main() {
     when(() => cubit.pickCover()).thenAnswer((_) async {});
   });
 
-  Future<void> pump(WidgetTester tester) => pumpRouted(
-    tester,
-    BlocProvider<TripDetailCubit>.value(
-      value: cubit,
-      child: TripDetailPage(tripId: testTrip.id),
-    ),
-  );
+  Future<void> pump(WidgetTester tester) {
+    final flights = MockFlightsCubit();
+    when(() => flights.state)
+        .thenReturn(ItemsState<Flight>.loaded(items: [testFlight]));
+    final lodgings = MockLodgingsCubit();
+    when(() => lodgings.state)
+        .thenReturn(const ItemsState<Lodging>.loaded(items: []));
+    final itinerary = MockItineraryCubit();
+    when(() => itinerary.state)
+        .thenReturn(const ItemsState<ItineraryItem>.loaded(items: []));
+    return pumpRouted(
+      tester,
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<TripDetailCubit>.value(value: cubit),
+          BlocProvider<FlightsCubit>.value(value: flights),
+          BlocProvider<LodgingsCubit>.value(value: lodgings),
+          BlocProvider<ItineraryCubit>.value(value: itinerary),
+        ],
+        child: TripDetailPage(tripId: testTrip.id),
+      ),
+    );
+  }
 
   testWidgets('shows the trip', (tester) async {
     when(() => cubit.state).thenReturn(TripDetailState.loaded(trip: testTrip));
@@ -44,6 +67,23 @@ void main() {
     expect(find.text('Cinco noches con traslados.'), findsOneWidget);
     expect(find.text('Publicado'), findsOneWidget);
     expect(find.text('Agregar portada'), findsOneWidget);
+  });
+
+  testWidgets('tabs show the trip logistics', (tester) async {
+    when(() => cubit.state).thenReturn(TripDetailState.loaded(trip: testTrip));
+    await pump(tester);
+
+    await tester.tap(find.text('Vuelos'));
+    await tester.pumpAndSettle();
+    expect(find.text('MEX → CUN'), findsOneWidget);
+
+    await tester.tap(find.text('Hospedaje'));
+    await tester.pumpAndSettle();
+    expect(find.text('Sin hospedaje'), findsOneWidget);
+
+    await tester.tap(find.text('Itinerario'));
+    await tester.pumpAndSettle();
+    expect(find.text('Sin actividades'), findsOneWidget);
   });
 
   testWidgets('cover button picks a cover', (tester) async {
