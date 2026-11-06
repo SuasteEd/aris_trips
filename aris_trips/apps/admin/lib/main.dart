@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
+import 'core/config/config_error_app.dart';
 import 'core/config/env.dart';
 import 'core/di/injection.dart';
 import 'core/router/app_router.dart';
@@ -13,7 +14,11 @@ import 'features/auth/presentation/cubit/session_cubit.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final env = Env.fromEnvironment()..validate();
+  final env = Env.fromEnvironment();
+  if (!env.isValid) {
+    runApp(ConfigErrorApp(missing: env.problems));
+    return;
+  }
 
   await Supabase.initialize(
     url: env.supabaseUrl,
