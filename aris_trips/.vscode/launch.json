@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Aris Admin (debug)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "apps/admin",
+      "program": "lib/main.dart",
+      "toolArgs": ["--dart-define-from-file=env.json"]
+    },
+    {
+      "name": "Aris Admin (profile)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "apps/admin",
+      "program": "lib/main.dart",
+      "flutterMode": "profile",
+      "toolArgs": ["--dart-define-from-file=env.json"]
+    }
+  ]
+}

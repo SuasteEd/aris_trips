@@ -36,7 +36,7 @@ cd apps/admin
 cp env.example.json env.json    # llenar SUPABASE_URL y SUPABASE_ANON_KEY (llave publishable)
 flutter pub get
 dart run build_runner build -d
-flutter run --dart-define-from-file=env.json
+flutter run --dart-define-from-file=env.json   # en VS Code: "Aris Admin (debug)" en Run and Debug
 ```
 
 Verificación:
