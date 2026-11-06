@@ -7,6 +7,7 @@ import '../../features/auth/presentation/cubit/login_cubit.dart';
 import '../../features/auth/presentation/cubit/session_cubit.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
+import '../../features/logistics/presentation/cubit/items_cubit.dart';
 import '../../features/trips/presentation/cubit/trip_detail_cubit.dart';
 import '../../features/trips/presentation/cubit/trip_form_cubit.dart';
 import '../../features/trips/presentation/cubit/trips_list_cubit.dart';
@@ -75,8 +76,13 @@ GoRouter createRouter({required SessionCubit session, GetIt? locator}) {
             path: ':id',
             builder: (context, state) {
               final id = state.pathParameters['id']!;
-              return BlocProvider(
-                create: (_) => get<TripDetailCubit>()..load(id),
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider(create: (_) => get<TripDetailCubit>()..load(id)),
+                  BlocProvider(create: (_) => get<FlightsCubit>()..load(id)),
+                  BlocProvider(create: (_) => get<LodgingsCubit>()..load(id)),
+                  BlocProvider(create: (_) => get<ItineraryCubit>()..load(id)),
+                ],
                 child: TripDetailPage(tripId: id),
               );
             },

@@ -9,6 +9,7 @@ import 'core/config/config_error_app.dart';
 import 'core/config/env.dart';
 import 'core/di/injection.dart';
 import 'core/format/date_formats.dart';
+import 'core/time/time_zones.dart';
 import 'core/router/app_router.dart';
 import 'features/auth/presentation/cubit/session_cubit.dart';
 
@@ -27,6 +28,7 @@ Future<void> main() async {
   );
 
   await initializeDateFormatting(DateFormats.locale);
+  TimeZones.ensureInitialized();
 
   getIt.registerSingleton<Env>(env);
   configureDependencies();

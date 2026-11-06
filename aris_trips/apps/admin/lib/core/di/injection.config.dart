@@ -42,6 +42,10 @@ import 'package:aris_admin/features/logistics/domain/usecases/itinerary_usecases
     as _i1038;
 import 'package:aris_admin/features/logistics/domain/usecases/lodging_usecases.dart'
     as _i400;
+import 'package:aris_admin/features/logistics/presentation/cubit/item_form_cubit.dart'
+    as _i967;
+import 'package:aris_admin/features/logistics/presentation/cubit/items_cubit.dart'
+    as _i297;
 import 'package:aris_admin/features/trips/data/datasources/trips_remote_data_source.dart'
     as _i78;
 import 'package:aris_admin/features/trips/data/repositories/trips_repository_impl.dart'
@@ -118,6 +122,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i139.ItineraryRepository>(
       () => _i835.ItineraryRepositoryImpl(gh<_i61.LogisticsRemoteDataSource>()),
     );
+    gh.factory<_i967.FlightFormCubit>(
+      () => _i967.FlightFormCubit(gh<_i262.SaveFlight>()),
+    );
     gh.lazySingleton<_i182.TripsRepository>(
       () => _i865.TripsRepositoryImpl(gh<_i78.TripsRemoteDataSource>()),
     );
@@ -136,6 +143,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i400.DeleteLodging>(
       () => _i400.DeleteLodging(gh<_i139.LodgingsRepository>()),
+    );
+    gh.factory<_i297.FlightsCubit>(
+      () =>
+          _i297.FlightsCubit(gh<_i262.GetFlights>(), gh<_i262.DeleteFlight>()),
     );
     gh.factory<_i649.LoginCubit>(() => _i649.LoginCubit(gh<_i1051.SignIn>()));
     gh.factory<_i687.ChangeTripStatus>(
@@ -160,8 +171,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1038.DeleteItineraryItem>(
       () => _i1038.DeleteItineraryItem(gh<_i139.ItineraryRepository>()),
     );
+    gh.factory<_i297.LodgingsCubit>(
+      () => _i297.LodgingsCubit(
+        gh<_i400.GetLodgings>(),
+        gh<_i400.DeleteLodging>(),
+      ),
+    );
+    gh.factory<_i967.LodgingFormCubit>(
+      () => _i967.LodgingFormCubit(gh<_i400.SaveLodging>()),
+    );
     gh.factory<_i428.TripFormCubit>(
       () => _i428.TripFormCubit(gh<_i668.GetTrip>(), gh<_i264.SaveTrip>()),
+    );
+    gh.factory<_i297.ItineraryCubit>(
+      () => _i297.ItineraryCubit(
+        gh<_i1038.GetItinerary>(),
+        gh<_i1038.DeleteItineraryItem>(),
+      ),
     );
     gh.factory<_i645.TripDetailCubit>(
       () => _i645.TripDetailCubit(
@@ -173,6 +199,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i713.TripsListCubit>(
       () => _i713.TripsListCubit(gh<_i651.GetTrips>()),
+    );
+    gh.factory<_i967.ItineraryFormCubit>(
+      () => _i967.ItineraryFormCubit(gh<_i1038.SaveItineraryItem>()),
     );
     return this;
   }

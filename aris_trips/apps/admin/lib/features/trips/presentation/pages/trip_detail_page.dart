@@ -7,6 +7,8 @@ import '../../../../core/format/date_formats.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/theme/app_tokens.dart';
 import '../../../../core/widgets/state_views.dart';
+import '../../../logistics/presentation/cubit/items_cubit.dart';
+import '../../../logistics/presentation/pages/logistics_tabs.dart';
 import '../../domain/entities/trip.dart';
 import '../../domain/entities/trip_status.dart';
 import '../cubit/trip_detail_cubit.dart';
@@ -14,7 +16,8 @@ import '../widgets/trip_cover.dart';
 import '../widgets/trip_status_chip.dart';
 import '../widgets/trip_status_ui.dart';
 
-/// Trip detail. Expects a [TripDetailCubit] already loading the trip.
+/// Trip detail with summary and logistics tabs. Expects a [TripDetailCubit]
+/// and, for the tabs, [FlightsCubit], [LodgingsCubit] and [ItineraryCubit].
 class TripDetailPage extends StatelessWidget {
   const TripDetailPage({super.key, required this.tripId});
 
@@ -72,49 +75,68 @@ class TripDetailPage extends StatelessWidget {
       },
       builder: (context, state) {
         final loaded = state is TripDetailLoaded ? state : null;
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Detalle del viaje'),
-            actions: [
-              if (loaded != null) ...[
-                IconButton(
-                  key: const Key('edit_trip'),
-                  tooltip: 'Editar',
-                  icon: const Icon(Icons.edit_outlined),
-                  onPressed: loaded.busy ? null : () => _edit(context),
-                ),
-                PopupMenuButton<TripStatus>(
-                  key: const Key('trip_status_menu'),
-                  tooltip: 'Cambiar estado',
-                  enabled: !loaded.busy,
-                  onSelected: (status) => _changeStatus(context, status),
-                  itemBuilder: (_) => [
-                    for (final status in TripStatus.values)
-                      if (status != loaded.trip.status)
-                        PopupMenuItem(
-                          value: status,
-                          child: ListTile(
-                            leading: Icon(status.icon),
-                            title: Text(status.actionLabel),
-                            contentPadding: EdgeInsets.zero,
+        return DefaultTabController(
+          length: 4,
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Detalle del viaje'),
+              bottom: loaded == null
+                  ? null
+                  : const TabBar(
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.start,
+                      tabs: [
+                        Tab(text: 'Resumen'),
+                        Tab(text: 'Vuelos'),
+                        Tab(text: 'Hospedaje'),
+                        Tab(text: 'Itinerario'),
+                      ],
+                    ),
+              actions: [
+                if (loaded != null) ...[
+                  IconButton(
+                    key: const Key('edit_trip'),
+                    tooltip: 'Editar',
+                    icon: const Icon(Icons.edit_outlined),
+                    onPressed: loaded.busy ? null : () => _edit(context),
+                  ),
+                  PopupMenuButton<TripStatus>(
+                    key: const Key('trip_status_menu'),
+                    tooltip: 'Cambiar estado',
+                    enabled: !loaded.busy,
+                    onSelected: (status) => _changeStatus(context, status),
+                    itemBuilder: (_) => [
+                      for (final status in TripStatus.values)
+                        if (status != loaded.trip.status)
+                          PopupMenuItem(
+                            value: status,
+                            child: ListTile(
+                              leading: Icon(status.icon),
+                              title: Text(status.actionLabel),
+                              contentPadding: EdgeInsets.zero,
+                            ),
                           ),
-                        ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ],
-            ],
+            ),
+            body: switch (state) {
+              TripDetailLoading() => const LoadingView(),
+              TripDetailFailure(:final failure) => ErrorView(
+                message: failure.message,
+                onRetry: () => context.read<TripDetailCubit>().load(tripId),
+              ),
+              TripDetailLoaded(:final trip, :final busy) => TabBarView(
+                children: [
+                  _TripDetailBody(trip: trip, busy: busy),
+                  FlightsTab(tripId: tripId),
+                  LodgingsTab(tripId: tripId),
+                  ItineraryTab(tripId: tripId),
+                ],
+              ),
+            },
           ),
-          body: switch (state) {
-            TripDetailLoading() => const LoadingView(),
-            TripDetailFailure(:final failure) => ErrorView(
-              message: failure.message,
-              onRetry: () => context.read<TripDetailCubit>().load(tripId),
-            ),
-            TripDetailLoaded(:final trip, :final busy) => _TripDetailBody(
-              trip: trip,
-              busy: busy,
-            ),
-          },
         );
       },
     );
