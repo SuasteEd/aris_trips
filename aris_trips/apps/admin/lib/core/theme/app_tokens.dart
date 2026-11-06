@@ -16,6 +16,7 @@ abstract final class AppColors {
   static const Color onError = Color(0xFFFFFFFF);
   static const Color success = Color(0xFF2E7D32);
   static const Color warning = Color(0xFFB26A00);
+  static const Color placeholder = Color(0xFFE8EEF1);
 }
 
 /// Spacing scale on a 4 dp grid.
