@@ -9,6 +9,9 @@ import '../../../../core/theme/app_tokens.dart';
 import '../../../../core/widgets/state_views.dart';
 import '../../../logistics/presentation/cubit/items_cubit.dart';
 import '../../../logistics/presentation/pages/logistics_tabs.dart';
+import '../../../passengers/domain/entities/booking.dart';
+import '../../../passengers/presentation/cubit/bookings_cubit.dart';
+import '../../../passengers/presentation/pages/passengers_tab.dart';
 import '../../domain/entities/trip.dart';
 import '../../domain/entities/trip_status.dart';
 import '../cubit/trip_detail_cubit.dart';
@@ -17,7 +20,8 @@ import '../widgets/trip_status_chip.dart';
 import '../widgets/trip_status_ui.dart';
 
 /// Trip detail with summary and logistics tabs. Expects a [TripDetailCubit]
-/// and, for the tabs, [FlightsCubit], [LodgingsCubit] and [ItineraryCubit].
+/// and, for the tabs, [FlightsCubit], [LodgingsCubit], [ItineraryCubit] and
+/// [BookingsCubit].
 class TripDetailPage extends StatelessWidget {
   const TripDetailPage({super.key, required this.tripId});
 
@@ -76,7 +80,7 @@ class TripDetailPage extends StatelessWidget {
       builder: (context, state) {
         final loaded = state is TripDetailLoaded ? state : null;
         return DefaultTabController(
-          length: 4,
+          length: 5,
           child: Scaffold(
             appBar: AppBar(
               title: const Text('Detalle del viaje'),
@@ -90,6 +94,7 @@ class TripDetailPage extends StatelessWidget {
                         Tab(text: 'Vuelos'),
                         Tab(text: 'Hospedaje'),
                         Tab(text: 'Itinerario'),
+                        Tab(text: 'Pasajeros'),
                       ],
                     ),
               actions: [
@@ -132,7 +137,15 @@ class TripDetailPage extends StatelessWidget {
                   _TripDetailBody(trip: trip, busy: busy),
                   FlightsTab(tripId: tripId),
                   LodgingsTab(tripId: tripId),
-                  ItineraryTab(tripId: tripId),
+                  // Rebuilt when bookings load so items can target a
+                  // passenger.
+                  BlocBuilder<BookingsCubit, ItemsState<Booking>>(
+                    builder: (context, _) => ItineraryTab(
+                      tripId: tripId,
+                      audience: context.read<BookingsCubit>().audience,
+                    ),
+                  ),
+                  PassengersTab(tripId: tripId),
                 ],
               ),
             },

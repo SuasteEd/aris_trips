@@ -8,6 +8,15 @@ import '../../features/auth/presentation/cubit/session_cubit.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/logistics/presentation/cubit/items_cubit.dart';
+import '../../features/passengers/presentation/cubit/add_passenger_cubit.dart';
+import '../../features/passengers/presentation/cubit/booking_cubit.dart';
+import '../../features/passengers/presentation/cubit/bookings_cubit.dart';
+import '../../features/passengers/presentation/cubit/bulk_assign_cubit.dart';
+import '../../features/passengers/presentation/cubit/import_cubit.dart';
+import '../../features/passengers/presentation/pages/add_passenger_page.dart';
+import '../../features/passengers/presentation/pages/booking_page.dart';
+import '../../features/passengers/presentation/pages/bulk_assign_page.dart';
+import '../../features/passengers/presentation/pages/import_passengers_page.dart';
 import '../../features/trips/presentation/cubit/trip_detail_cubit.dart';
 import '../../features/trips/presentation/cubit/trip_form_cubit.dart';
 import '../../features/trips/presentation/cubit/trips_list_cubit.dart';
@@ -82,11 +91,55 @@ GoRouter createRouter({required SessionCubit session, GetIt? locator}) {
                   BlocProvider(create: (_) => get<FlightsCubit>()..load(id)),
                   BlocProvider(create: (_) => get<LodgingsCubit>()..load(id)),
                   BlocProvider(create: (_) => get<ItineraryCubit>()..load(id)),
+                  BlocProvider(create: (_) => get<BookingsCubit>()..load(id)),
                 ],
                 child: TripDetailPage(tripId: id),
               );
             },
             routes: [
+              GoRoute(
+                path: 'passengers/new',
+                builder: (context, state) => BlocProvider(
+                  create: (_) => get<AddPassengerCubit>()
+                    ..configure(
+                      tripId: state.pathParameters['id']!,
+                      onTrip: switch (state.extra) {
+                        final Set<String> ids => ids,
+                        _ => const {},
+                      },
+                    ),
+                  child: const AddPassengerPage(),
+                ),
+              ),
+              GoRoute(
+                path: 'passengers/import',
+                builder: (context, state) => BlocProvider(
+                  create: (_) =>
+                      get<ImportCubit>()
+                        ..configure(state.pathParameters['id']!),
+                  child: const ImportPassengersPage(),
+                ),
+              ),
+              GoRoute(
+                path: 'passengers/assign',
+                builder: (context, state) => BlocProvider(
+                  create: (_) =>
+                      get<BulkAssignCubit>()..load(state.pathParameters['id']!),
+                  child: const BulkAssignPage(),
+                ),
+              ),
+              // After the static paths so "new" is not taken as an id.
+              GoRoute(
+                path: 'passengers/:bookingId',
+                builder: (context, state) => BlocProvider(
+                  create: (_) => get<BookingCubit>()
+                    ..load(
+                      tripId: state.pathParameters['id']!,
+                      bookingId: state.pathParameters['bookingId']!,
+                    ),
+                  child: const BookingPage(),
+                ),
+              ),
               GoRoute(
                 path: 'edit',
                 builder: (context, state) {

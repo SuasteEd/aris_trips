@@ -4,6 +4,8 @@ import 'package:aris_admin/features/logistics/domain/entities/flight.dart';
 import 'package:aris_admin/features/logistics/domain/entities/itinerary_item.dart';
 import 'package:aris_admin/features/logistics/domain/entities/lodging.dart';
 import 'package:aris_admin/features/logistics/presentation/cubit/items_cubit.dart';
+import 'package:aris_admin/features/passengers/domain/entities/booking.dart';
+import 'package:aris_admin/features/passengers/presentation/cubit/bookings_cubit.dart';
 import 'package:aris_admin/features/trips/domain/entities/trip_status.dart';
 import 'package:aris_admin/features/trips/presentation/cubit/trip_detail_cubit.dart';
 import 'package:aris_admin/features/trips/presentation/pages/trip_detail_page.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../helpers/logistics_fakes.dart';
+import '../../../helpers/passengers_fakes.dart';
 import '../../../helpers/pump_app.dart';
 import '../../../helpers/trips_fakes.dart';
 
@@ -43,6 +46,12 @@ void main() {
     final itinerary = MockItineraryCubit();
     when(() => itinerary.state)
         .thenReturn(const ItemsState<ItineraryItem>.loaded(items: []));
+    final bookings = MockBookingsCubit();
+    when(() => bookings.state).thenReturn(
+      const ItemsState<Booking>.loaded(items: [anaBooking, luisBooking]),
+    );
+    when(() => bookings.bookings).thenReturn(const [anaBooking, luisBooking]);
+    when(() => bookings.audience).thenReturn({'b1': 'Ana López'});
     return pumpRouted(
       tester,
       MultiBlocProvider(
@@ -51,6 +60,7 @@ void main() {
           BlocProvider<FlightsCubit>.value(value: flights),
           BlocProvider<LodgingsCubit>.value(value: lodgings),
           BlocProvider<ItineraryCubit>.value(value: itinerary),
+          BlocProvider<BookingsCubit>.value(value: bookings),
         ],
         child: TripDetailPage(tripId: testTrip.id),
       ),
@@ -84,6 +94,11 @@ void main() {
     await tester.tap(find.text('Itinerario'));
     await tester.pumpAndSettle();
     expect(find.text('Sin actividades'), findsOneWidget);
+
+    await tester.tap(find.text('Pasajeros'));
+    await tester.pumpAndSettle();
+    expect(find.text('Ana López'), findsOneWidget);
+    expect(find.text('2 pasajeros'), findsOneWidget);
   });
 
   testWidgets('cover button picks a cover', (tester) async {

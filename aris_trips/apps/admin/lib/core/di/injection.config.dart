@@ -11,6 +11,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:aris_admin/core/di/supabase_module.dart' as _i761;
+import 'package:aris_admin/core/media/file_picker_service.dart' as _i511;
 import 'package:aris_admin/core/media/image_picker_service.dart' as _i1043;
 import 'package:aris_admin/features/auth/data/datasources/auth_remote_data_source.dart'
     as _i860;
@@ -56,6 +57,16 @@ import 'package:aris_admin/features/passengers/domain/usecases/assignment_usecas
     as _i395;
 import 'package:aris_admin/features/passengers/domain/usecases/passenger_usecases.dart'
     as _i328;
+import 'package:aris_admin/features/passengers/presentation/cubit/add_passenger_cubit.dart'
+    as _i1058;
+import 'package:aris_admin/features/passengers/presentation/cubit/booking_cubit.dart'
+    as _i37;
+import 'package:aris_admin/features/passengers/presentation/cubit/bookings_cubit.dart'
+    as _i488;
+import 'package:aris_admin/features/passengers/presentation/cubit/bulk_assign_cubit.dart'
+    as _i912;
+import 'package:aris_admin/features/passengers/presentation/cubit/import_cubit.dart'
+    as _i34;
 import 'package:aris_admin/features/trips/data/datasources/trips_remote_data_source.dart'
     as _i78;
 import 'package:aris_admin/features/trips/data/repositories/trips_repository_impl.dart'
@@ -94,6 +105,9 @@ extension GetItInjectableX on _i174.GetIt {
       () => const _i328.BuildImportPreview(),
     );
     gh.lazySingleton<_i454.SupabaseClient>(() => supabaseModule.client);
+    gh.lazySingleton<_i511.FilePickerService>(
+      () => _i511.DeviceFilePickerService(),
+    );
     gh.lazySingleton<_i1043.ImagePickerService>(
       () => _i1043.DeviceImagePickerService(),
     );
@@ -243,6 +257,13 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i400.DeleteLodging>(),
       ),
     );
+    gh.factory<_i1058.AddPassengerCubit>(
+      () => _i1058.AddPassengerCubit(
+        gh<_i328.SearchPassengers>(),
+        gh<_i328.AddNewPassenger>(),
+        gh<_i328.AddExistingPassenger>(),
+      ),
+    );
     gh.factory<_i967.LodgingFormCubit>(
       () => _i967.LodgingFormCubit(gh<_i400.SaveLodging>()),
     );
@@ -255,6 +276,20 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1038.DeleteItineraryItem>(),
       ),
     );
+    gh.factory<_i37.BookingCubit>(
+      () => _i37.BookingCubit(
+        gh<_i328.GetBooking>(),
+        gh<_i262.GetFlights>(),
+        gh<_i400.GetLodgings>(),
+        gh<_i1038.GetItinerary>(),
+        gh<_i328.UpdatePassenger>(),
+        gh<_i328.UpdateBooking>(),
+        gh<_i328.RemoveBooking>(),
+        gh<_i395.SaveFlightAssignment>(),
+        gh<_i395.SaveLodgingAssignment>(),
+        gh<_i395.RemoveAssignment>(),
+      ),
+    );
     gh.factory<_i645.TripDetailCubit>(
       () => _i645.TripDetailCubit(
         gh<_i668.GetTrip>(),
@@ -263,11 +298,33 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1043.ImagePickerService>(),
       ),
     );
+    gh.factory<_i488.BookingsCubit>(
+      () => _i488.BookingsCubit(
+        gh<_i328.GetBookings>(),
+        gh<_i328.RemoveBooking>(),
+      ),
+    );
+    gh.factory<_i34.ImportCubit>(
+      () => _i34.ImportCubit(
+        gh<_i511.FilePickerService>(),
+        gh<_i328.GetBookings>(),
+        gh<_i328.BuildImportPreview>(),
+        gh<_i328.ImportPassengers>(),
+      ),
+    );
     gh.factory<_i713.TripsListCubit>(
       () => _i713.TripsListCubit(gh<_i651.GetTrips>()),
     );
     gh.factory<_i967.ItineraryFormCubit>(
       () => _i967.ItineraryFormCubit(gh<_i1038.SaveItineraryItem>()),
+    );
+    gh.factory<_i912.BulkAssignCubit>(
+      () => _i912.BulkAssignCubit(
+        gh<_i328.GetBookings>(),
+        gh<_i262.GetFlights>(),
+        gh<_i400.GetLodgings>(),
+        gh<_i395.BulkAssign>(),
+      ),
     );
     return this;
   }
