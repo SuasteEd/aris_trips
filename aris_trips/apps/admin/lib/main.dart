@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app.dart';
 import 'core/config/config_error_app.dart';
 import 'core/config/env.dart';
 import 'core/di/injection.dart';
+import 'core/format/date_formats.dart';
 import 'core/router/app_router.dart';
-import 'features/auth/presentation/cubit/login_cubit.dart';
 import 'features/auth/presentation/cubit/session_cubit.dart';
 
 Future<void> main() async {
@@ -25,6 +26,8 @@ Future<void> main() async {
     publishableKey: env.supabaseAnonKey,
   );
 
+  await initializeDateFormatting(DateFormats.locale);
+
   getIt.registerSingleton<Env>(env);
   configureDependencies();
 
@@ -34,10 +37,7 @@ Future<void> main() async {
   runApp(
     AdminApp(
       session: session,
-      router: createRouter(
-        session: session,
-        loginCubitFactory: () => getIt<LoginCubit>(),
-      ),
+      router: createRouter(session: session),
     ),
   );
 }

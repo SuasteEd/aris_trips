@@ -11,6 +11,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:aris_admin/core/di/supabase_module.dart' as _i761;
+import 'package:aris_admin/core/media/image_picker_service.dart' as _i1043;
 import 'package:aris_admin/features/auth/data/datasources/auth_remote_data_source.dart'
     as _i860;
 import 'package:aris_admin/features/auth/data/repositories/auth_repository_impl.dart'
@@ -45,6 +46,12 @@ import 'package:aris_admin/features/trips/domain/usecases/save_trip.dart'
     as _i264;
 import 'package:aris_admin/features/trips/domain/usecases/set_trip_cover.dart'
     as _i622;
+import 'package:aris_admin/features/trips/presentation/cubit/trip_detail_cubit.dart'
+    as _i645;
+import 'package:aris_admin/features/trips/presentation/cubit/trip_form_cubit.dart'
+    as _i428;
+import 'package:aris_admin/features/trips/presentation/cubit/trips_list_cubit.dart'
+    as _i713;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
@@ -58,6 +65,9 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final supabaseModule = _$SupabaseModule();
     gh.lazySingleton<_i454.SupabaseClient>(() => supabaseModule.client);
+    gh.lazySingleton<_i1043.ImagePickerService>(
+      () => _i1043.DeviceImagePickerService(),
+    );
     gh.lazySingleton<_i78.TripsRemoteDataSource>(
       () => _i78.SupabaseTripsRemoteDataSource(gh<_i454.SupabaseClient>()),
     );
@@ -98,6 +108,20 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i622.SetTripCover>(
       () => _i622.SetTripCover(gh<_i182.TripsRepository>()),
+    );
+    gh.factory<_i428.TripFormCubit>(
+      () => _i428.TripFormCubit(gh<_i668.GetTrip>(), gh<_i264.SaveTrip>()),
+    );
+    gh.factory<_i645.TripDetailCubit>(
+      () => _i645.TripDetailCubit(
+        gh<_i668.GetTrip>(),
+        gh<_i687.ChangeTripStatus>(),
+        gh<_i622.SetTripCover>(),
+        gh<_i1043.ImagePickerService>(),
+      ),
+    );
+    gh.factory<_i713.TripsListCubit>(
+      () => _i713.TripsListCubit(gh<_i651.GetTrips>()),
     );
     return this;
   }
