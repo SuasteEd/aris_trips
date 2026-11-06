@@ -13,8 +13,14 @@ sealed class Failure with _$Failure {
   /// No connection or timeout.
   const factory Failure.network() = NetworkFailure;
 
-  /// Missing session or not an admin.
+  /// Missing or expired session.
   const factory Failure.unauthorized() = UnauthorizedFailure;
+
+  /// Wrong email or password.
+  const factory Failure.invalidCredentials() = InvalidCredentialsFailure;
+
+  /// Valid account without a row in `admins`.
+  const factory Failure.notAdmin() = NotAdminFailure;
 
   /// The requested record does not exist.
   const factory Failure.notFound() = NotFoundFailure;
