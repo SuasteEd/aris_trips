@@ -56,7 +56,7 @@ extension FailurePatterns on Failure {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( NetworkFailure value)?  network,TResult Function( UnauthorizedFailure value)?  unauthorized,TResult Function( InvalidCredentialsFailure value)?  invalidCredentials,TResult Function( NotAdminFailure value)?  notAdmin,TResult Function( NotFoundFailure value)?  notFound,TResult Function( UnexpectedFailure value)?  unexpected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( NetworkFailure value)?  network,TResult Function( UnauthorizedFailure value)?  unauthorized,TResult Function( InvalidCredentialsFailure value)?  invalidCredentials,TResult Function( NotAdminFailure value)?  notAdmin,TResult Function( InvalidInputFailure value)?  invalidInput,TResult Function( NotFoundFailure value)?  notFound,TResult Function( UnexpectedFailure value)?  unexpected,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
@@ -64,7 +64,8 @@ return server(_that);case NetworkFailure() when network != null:
 return network(_that);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that);case InvalidCredentialsFailure() when invalidCredentials != null:
 return invalidCredentials(_that);case NotAdminFailure() when notAdmin != null:
-return notAdmin(_that);case NotFoundFailure() when notFound != null:
+return notAdmin(_that);case InvalidInputFailure() when invalidInput != null:
+return invalidInput(_that);case NotFoundFailure() when notFound != null:
 return notFound(_that);case UnexpectedFailure() when unexpected != null:
 return unexpected(_that);case _:
   return orElse();
@@ -84,7 +85,7 @@ return unexpected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( NetworkFailure value)  network,required TResult Function( UnauthorizedFailure value)  unauthorized,required TResult Function( InvalidCredentialsFailure value)  invalidCredentials,required TResult Function( NotAdminFailure value)  notAdmin,required TResult Function( NotFoundFailure value)  notFound,required TResult Function( UnexpectedFailure value)  unexpected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( NetworkFailure value)  network,required TResult Function( UnauthorizedFailure value)  unauthorized,required TResult Function( InvalidCredentialsFailure value)  invalidCredentials,required TResult Function( NotAdminFailure value)  notAdmin,required TResult Function( InvalidInputFailure value)  invalidInput,required TResult Function( NotFoundFailure value)  notFound,required TResult Function( UnexpectedFailure value)  unexpected,}){
 final _that = this;
 switch (_that) {
 case ServerFailure():
@@ -92,7 +93,8 @@ return server(_that);case NetworkFailure():
 return network(_that);case UnauthorizedFailure():
 return unauthorized(_that);case InvalidCredentialsFailure():
 return invalidCredentials(_that);case NotAdminFailure():
-return notAdmin(_that);case NotFoundFailure():
+return notAdmin(_that);case InvalidInputFailure():
+return invalidInput(_that);case NotFoundFailure():
 return notFound(_that);case UnexpectedFailure():
 return unexpected(_that);}
 }
@@ -108,7 +110,7 @@ return unexpected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( NetworkFailure value)?  network,TResult? Function( UnauthorizedFailure value)?  unauthorized,TResult? Function( InvalidCredentialsFailure value)?  invalidCredentials,TResult? Function( NotAdminFailure value)?  notAdmin,TResult? Function( NotFoundFailure value)?  notFound,TResult? Function( UnexpectedFailure value)?  unexpected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( NetworkFailure value)?  network,TResult? Function( UnauthorizedFailure value)?  unauthorized,TResult? Function( InvalidCredentialsFailure value)?  invalidCredentials,TResult? Function( NotAdminFailure value)?  notAdmin,TResult? Function( InvalidInputFailure value)?  invalidInput,TResult? Function( NotFoundFailure value)?  notFound,TResult? Function( UnexpectedFailure value)?  unexpected,}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
@@ -116,7 +118,8 @@ return server(_that);case NetworkFailure() when network != null:
 return network(_that);case UnauthorizedFailure() when unauthorized != null:
 return unauthorized(_that);case InvalidCredentialsFailure() when invalidCredentials != null:
 return invalidCredentials(_that);case NotAdminFailure() when notAdmin != null:
-return notAdmin(_that);case NotFoundFailure() when notFound != null:
+return notAdmin(_that);case InvalidInputFailure() when invalidInput != null:
+return invalidInput(_that);case NotFoundFailure() when notFound != null:
 return notFound(_that);case UnexpectedFailure() when unexpected != null:
 return unexpected(_that);case _:
   return null;
@@ -135,14 +138,15 @@ return unexpected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message,  String? code)?  server,TResult Function()?  network,TResult Function()?  unauthorized,TResult Function()?  invalidCredentials,TResult Function()?  notAdmin,TResult Function()?  notFound,TResult Function( String message)?  unexpected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message,  String? code)?  server,TResult Function()?  network,TResult Function()?  unauthorized,TResult Function()?  invalidCredentials,TResult Function()?  notAdmin,TResult Function()?  invalidInput,TResult Function()?  notFound,TResult Function( String message)?  unexpected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message,_that.code);case NetworkFailure() when network != null:
 return network();case UnauthorizedFailure() when unauthorized != null:
 return unauthorized();case InvalidCredentialsFailure() when invalidCredentials != null:
 return invalidCredentials();case NotAdminFailure() when notAdmin != null:
-return notAdmin();case NotFoundFailure() when notFound != null:
+return notAdmin();case InvalidInputFailure() when invalidInput != null:
+return invalidInput();case NotFoundFailure() when notFound != null:
 return notFound();case UnexpectedFailure() when unexpected != null:
 return unexpected(_that.message);case _:
   return orElse();
@@ -162,14 +166,15 @@ return unexpected(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message,  String? code)  server,required TResult Function()  network,required TResult Function()  unauthorized,required TResult Function()  invalidCredentials,required TResult Function()  notAdmin,required TResult Function()  notFound,required TResult Function( String message)  unexpected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message,  String? code)  server,required TResult Function()  network,required TResult Function()  unauthorized,required TResult Function()  invalidCredentials,required TResult Function()  notAdmin,required TResult Function()  invalidInput,required TResult Function()  notFound,required TResult Function( String message)  unexpected,}) {final _that = this;
 switch (_that) {
 case ServerFailure():
 return server(_that.message,_that.code);case NetworkFailure():
 return network();case UnauthorizedFailure():
 return unauthorized();case InvalidCredentialsFailure():
 return invalidCredentials();case NotAdminFailure():
-return notAdmin();case NotFoundFailure():
+return notAdmin();case InvalidInputFailure():
+return invalidInput();case NotFoundFailure():
 return notFound();case UnexpectedFailure():
 return unexpected(_that.message);}
 }
@@ -185,14 +190,15 @@ return unexpected(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message,  String? code)?  server,TResult? Function()?  network,TResult? Function()?  unauthorized,TResult? Function()?  invalidCredentials,TResult? Function()?  notAdmin,TResult? Function()?  notFound,TResult? Function( String message)?  unexpected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message,  String? code)?  server,TResult? Function()?  network,TResult? Function()?  unauthorized,TResult? Function()?  invalidCredentials,TResult? Function()?  notAdmin,TResult? Function()?  invalidInput,TResult? Function()?  notFound,TResult? Function( String message)?  unexpected,}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message,_that.code);case NetworkFailure() when network != null:
 return network();case UnauthorizedFailure() when unauthorized != null:
 return unauthorized();case InvalidCredentialsFailure() when invalidCredentials != null:
 return invalidCredentials();case NotAdminFailure() when notAdmin != null:
-return notAdmin();case NotFoundFailure() when notFound != null:
+return notAdmin();case InvalidInputFailure() when invalidInput != null:
+return invalidInput();case NotFoundFailure() when notFound != null:
 return notFound();case UnexpectedFailure() when unexpected != null:
 return unexpected(_that.message);case _:
   return null;
@@ -392,6 +398,38 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
     return 'Failure.notAdmin()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class InvalidInputFailure implements Failure {
+  const InvalidInputFailure();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is InvalidInputFailure);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+    return 'Failure.invalidInput()';
 }
 
 

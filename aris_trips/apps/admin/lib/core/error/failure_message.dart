@@ -8,6 +8,7 @@ extension FailureMessage on Failure {
     UnauthorizedFailure() => 'Tu sesión terminó. Inicia sesión de nuevo.',
     InvalidCredentialsFailure() => 'Correo o contraseña incorrectos.',
     NotAdminFailure() => 'Esta cuenta no tiene acceso de administrador.',
+    InvalidInputFailure() => 'Revisa los datos marcados.',
     NotFoundFailure() => 'No encontramos lo que buscas.',
     ServerFailure() ||
     UnexpectedFailure() => 'Ocurrió un error. Inténtalo de nuevo.',

@@ -22,6 +22,9 @@ sealed class Failure with _$Failure {
   /// Valid account without a row in `admins`.
   const factory Failure.notAdmin() = NotAdminFailure;
 
+  /// Input rejected by domain validation before reaching the server.
+  const factory Failure.invalidInput() = InvalidInputFailure;
+
   /// The requested record does not exist.
   const factory Failure.notFound() = NotFoundFailure;
 

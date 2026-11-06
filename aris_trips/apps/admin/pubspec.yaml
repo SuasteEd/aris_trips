@@ -44,6 +44,9 @@ dependencies:
   fpdart: ^1.2.0
   flutter_localizations:
     sdk: flutter
+  image_picker: ^1.2.4
+  intl: ^0.20.3
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:

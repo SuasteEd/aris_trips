@@ -5,6 +5,7 @@ import 'package:aris_admin/core/error/failure.dart';
 import 'package:aris_admin/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:aris_admin/features/auth/data/repositories/auth_failure_mapper.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' show ClientException;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
@@ -46,6 +47,22 @@ void main() {
     'postgrest': (
       const PostgrestException(message: 'boom', code: '500'),
       const Failure.server(message: 'boom', code: '500'),
+    ),
+    'http client error': (
+      ClientException('Failed host lookup'),
+      const Failure.network(),
+    ),
+    'row not found': (
+      const PostgrestException(message: 'no rows', code: 'PGRST116'),
+      const Failure.notFound(),
+    ),
+    'rls violation': (
+      const PostgrestException(message: 'denied', code: '42501'),
+      const Failure.unauthorized(),
+    ),
+    'storage forbidden': (
+      const StorageException('denied', statusCode: '403'),
+      const Failure.unauthorized(),
     ),
     'unknown': (
       StateError('x'),
