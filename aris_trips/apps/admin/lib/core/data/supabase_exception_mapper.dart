@@ -43,6 +43,8 @@ Failure _map(Object error) {
     AuthException(statusCode: '401') => const Failure.unauthorized(),
     // PGRST116: .single() matched no rows (missing or hidden by RLS).
     PostgrestException(code: 'PGRST116') => const Failure.notFound(),
+    // 23505: unique violation (e.g. passenger already on the trip).
+    PostgrestException(code: '23505') => const Failure.conflict(),
     // 42501: insufficient privilege / row-level security violation.
     PostgrestException(code: '42501') => const Failure.unauthorized(),
     StorageException(statusCode: '403') => const Failure.unauthorized(),

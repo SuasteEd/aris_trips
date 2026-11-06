@@ -9,6 +9,7 @@ extension FailureMessage on Failure {
     InvalidCredentialsFailure() => 'Correo o contraseña incorrectos.',
     NotAdminFailure() => 'Esta cuenta no tiene acceso de administrador.',
     InvalidInputFailure() => 'Revisa los datos marcados.',
+    ConflictFailure() => 'Ese registro ya existe.',
     NotFoundFailure() => 'No encontramos lo que buscas.',
     ServerFailure() ||
     UnexpectedFailure() => 'Ocurrió un error. Inténtalo de nuevo.',

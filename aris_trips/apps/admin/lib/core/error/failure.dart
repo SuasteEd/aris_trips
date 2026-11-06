@@ -25,6 +25,9 @@ sealed class Failure with _$Failure {
   /// Input rejected by domain validation before reaching the server.
   const factory Failure.invalidInput() = InvalidInputFailure;
 
+  /// The record already exists (unique constraint).
+  const factory Failure.conflict() = ConflictFailure;
+
   /// The requested record does not exist.
   const factory Failure.notFound() = NotFoundFailure;
 

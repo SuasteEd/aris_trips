@@ -4,6 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
+  test('unique violations are conflicts', () {
+    expect(
+      mapSupabaseException(
+        const PostgrestException(message: 'dup', code: '23505'),
+      ),
+      const Failure.conflict(),
+    );
+  });
+
   test('storage not found', () {
     expect(
       mapSupabaseException(const StorageException('gone', statusCode: '404')),
