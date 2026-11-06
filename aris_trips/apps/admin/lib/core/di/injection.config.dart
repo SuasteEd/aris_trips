@@ -30,6 +30,18 @@ import 'package:aris_admin/features/auth/presentation/cubit/login_cubit.dart'
     as _i649;
 import 'package:aris_admin/features/auth/presentation/cubit/session_cubit.dart'
     as _i893;
+import 'package:aris_admin/features/logistics/data/datasources/logistics_remote_data_source.dart'
+    as _i61;
+import 'package:aris_admin/features/logistics/data/repositories/logistics_repositories_impl.dart'
+    as _i835;
+import 'package:aris_admin/features/logistics/domain/repositories/logistics_repositories.dart'
+    as _i139;
+import 'package:aris_admin/features/logistics/domain/usecases/flight_usecases.dart'
+    as _i262;
+import 'package:aris_admin/features/logistics/domain/usecases/itinerary_usecases.dart'
+    as _i1038;
+import 'package:aris_admin/features/logistics/domain/usecases/lodging_usecases.dart'
+    as _i400;
 import 'package:aris_admin/features/trips/data/datasources/trips_remote_data_source.dart'
     as _i78;
 import 'package:aris_admin/features/trips/data/repositories/trips_repository_impl.dart'
@@ -74,6 +86,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i860.AuthRemoteDataSource>(
       () => _i860.SupabaseAuthRemoteDataSource(gh<_i454.SupabaseClient>()),
     );
+    gh.lazySingleton<_i61.LogisticsRemoteDataSource>(
+      () => _i61.SupabaseLogisticsRemoteDataSource(gh<_i454.SupabaseClient>()),
+    );
     gh.lazySingleton<_i616.AuthRepository>(
       () => _i614.AuthRepositoryImpl(gh<_i860.AuthRemoteDataSource>()),
     );
@@ -85,6 +100,24 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i111.WatchSignedOut>(
       () => _i111.WatchSignedOut(gh<_i616.AuthRepository>()),
     );
+    gh.lazySingleton<_i139.FlightsRepository>(
+      () => _i835.FlightsRepositoryImpl(gh<_i61.LogisticsRemoteDataSource>()),
+    );
+    gh.factory<_i262.GetFlights>(
+      () => _i262.GetFlights(gh<_i139.FlightsRepository>()),
+    );
+    gh.factory<_i262.SaveFlight>(
+      () => _i262.SaveFlight(gh<_i139.FlightsRepository>()),
+    );
+    gh.factory<_i262.DeleteFlight>(
+      () => _i262.DeleteFlight(gh<_i139.FlightsRepository>()),
+    );
+    gh.lazySingleton<_i139.LodgingsRepository>(
+      () => _i835.LodgingsRepositoryImpl(gh<_i61.LogisticsRemoteDataSource>()),
+    );
+    gh.lazySingleton<_i139.ItineraryRepository>(
+      () => _i835.ItineraryRepositoryImpl(gh<_i61.LogisticsRemoteDataSource>()),
+    );
     gh.lazySingleton<_i182.TripsRepository>(
       () => _i865.TripsRepositoryImpl(gh<_i78.TripsRemoteDataSource>()),
     );
@@ -94,6 +127,15 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i465.SignOut>(),
         gh<_i111.WatchSignedOut>(),
       ),
+    );
+    gh.factory<_i400.GetLodgings>(
+      () => _i400.GetLodgings(gh<_i139.LodgingsRepository>()),
+    );
+    gh.factory<_i400.SaveLodging>(
+      () => _i400.SaveLodging(gh<_i139.LodgingsRepository>()),
+    );
+    gh.factory<_i400.DeleteLodging>(
+      () => _i400.DeleteLodging(gh<_i139.LodgingsRepository>()),
     );
     gh.factory<_i649.LoginCubit>(() => _i649.LoginCubit(gh<_i1051.SignIn>()));
     gh.factory<_i687.ChangeTripStatus>(
@@ -108,6 +150,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i622.SetTripCover>(
       () => _i622.SetTripCover(gh<_i182.TripsRepository>()),
+    );
+    gh.factory<_i1038.GetItinerary>(
+      () => _i1038.GetItinerary(gh<_i139.ItineraryRepository>()),
+    );
+    gh.factory<_i1038.SaveItineraryItem>(
+      () => _i1038.SaveItineraryItem(gh<_i139.ItineraryRepository>()),
+    );
+    gh.factory<_i1038.DeleteItineraryItem>(
+      () => _i1038.DeleteItineraryItem(gh<_i139.ItineraryRepository>()),
     );
     gh.factory<_i428.TripFormCubit>(
       () => _i428.TripFormCubit(gh<_i668.GetTrip>(), gh<_i264.SaveTrip>()),
