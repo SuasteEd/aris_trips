@@ -9,8 +9,9 @@ Failure mapAuthException(Object error) {
   return switch (error) {
     NotAdminException() => const Failure.notAdmin(),
     AuthException(code: 'invalid_credentials') ||
-    AuthException(message: 'Invalid login credentials') =>
-      const Failure.invalidCredentials(),
+    AuthException(
+      message: 'Invalid login credentials',
+    ) => const Failure.invalidCredentials(),
     _ => mapSupabaseException(error, logName: 'auth'),
   };
 }

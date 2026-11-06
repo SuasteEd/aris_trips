@@ -12,7 +12,8 @@ import '../error/failure.dart';
 /// network into [Failure]. Used only by the data layer.
 Failure mapSupabaseException(Object error, {String logName = 'data'}) {
   final failure = _map(error);
-  if (kDebugMode && (failure is ServerFailure || failure is UnexpectedFailure)) {
+  if (kDebugMode &&
+      (failure is ServerFailure || failure is UnexpectedFailure)) {
     // Debug builds only: exception type, code and server message. Never log
     // emails, passwords, tokens or access codes.
     final (code, message) = switch (error) {

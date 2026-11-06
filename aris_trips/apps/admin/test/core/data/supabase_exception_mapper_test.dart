@@ -23,7 +23,11 @@ void main() {
   test('invalid credentials are not special outside auth', () {
     expect(
       mapSupabaseException(
-        const AuthApiException('bad', statusCode: '400', code: 'invalid_credentials'),
+        const AuthApiException(
+          'bad',
+          statusCode: '400',
+          code: 'invalid_credentials',
+        ),
       ),
       const Failure.server(message: 'bad', code: 'invalid_credentials'),
     );

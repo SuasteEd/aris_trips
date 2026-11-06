@@ -12,9 +12,6 @@ void main() {
       find.textContaining('SUPABASE_URL, SUPABASE_ANON_KEY'),
       findsOneWidget,
     );
-    expect(
-      find.textContaining('--dart-define-from-file=.env'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('--dart-define-from-file=.env'), findsOneWidget);
   });
 }
