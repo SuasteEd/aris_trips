@@ -46,6 +46,16 @@ import 'package:aris_admin/features/logistics/presentation/cubit/item_form_cubit
     as _i967;
 import 'package:aris_admin/features/logistics/presentation/cubit/items_cubit.dart'
     as _i297;
+import 'package:aris_admin/features/passengers/data/datasources/passengers_remote_data_source.dart'
+    as _i931;
+import 'package:aris_admin/features/passengers/data/repositories/passengers_repositories_impl.dart'
+    as _i548;
+import 'package:aris_admin/features/passengers/domain/repositories/passengers_repositories.dart'
+    as _i591;
+import 'package:aris_admin/features/passengers/domain/usecases/assignment_usecases.dart'
+    as _i395;
+import 'package:aris_admin/features/passengers/domain/usecases/passenger_usecases.dart'
+    as _i328;
 import 'package:aris_admin/features/trips/data/datasources/trips_remote_data_source.dart'
     as _i78;
 import 'package:aris_admin/features/trips/data/repositories/trips_repository_impl.dart'
@@ -80,6 +90,9 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final supabaseModule = _$SupabaseModule();
+    gh.factory<_i328.BuildImportPreview>(
+      () => const _i328.BuildImportPreview(),
+    );
     gh.lazySingleton<_i454.SupabaseClient>(() => supabaseModule.client);
     gh.lazySingleton<_i1043.ImagePickerService>(
       () => _i1043.DeviceImagePickerService(),
@@ -92,6 +105,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i61.LogisticsRemoteDataSource>(
       () => _i61.SupabaseLogisticsRemoteDataSource(gh<_i454.SupabaseClient>()),
+    );
+    gh.lazySingleton<_i931.PassengersRemoteDataSource>(
+      () =>
+          _i931.SupabasePassengersRemoteDataSource(gh<_i454.SupabaseClient>()),
     );
     gh.lazySingleton<_i616.AuthRepository>(
       () => _i614.AuthRepositoryImpl(gh<_i860.AuthRemoteDataSource>()),
@@ -135,6 +152,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i111.WatchSignedOut>(),
       ),
     );
+    gh.lazySingleton<_i591.PassengersRepository>(
+      () => _i548.PassengersRepositoryImpl(
+        gh<_i931.PassengersRemoteDataSource>(),
+      ),
+    );
     gh.factory<_i400.GetLodgings>(
       () => _i400.GetLodgings(gh<_i139.LodgingsRepository>()),
     );
@@ -147,6 +169,50 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i297.FlightsCubit>(
       () =>
           _i297.FlightsCubit(gh<_i262.GetFlights>(), gh<_i262.DeleteFlight>()),
+    );
+    gh.lazySingleton<_i591.AssignmentsRepository>(
+      () => _i548.AssignmentsRepositoryImpl(
+        gh<_i931.PassengersRemoteDataSource>(),
+      ),
+    );
+    gh.factory<_i328.GetBookings>(
+      () => _i328.GetBookings(gh<_i591.PassengersRepository>()),
+    );
+    gh.factory<_i328.GetBooking>(
+      () => _i328.GetBooking(gh<_i591.PassengersRepository>()),
+    );
+    gh.factory<_i328.SearchPassengers>(
+      () => _i328.SearchPassengers(gh<_i591.PassengersRepository>()),
+    );
+    gh.factory<_i328.AddNewPassenger>(
+      () => _i328.AddNewPassenger(gh<_i591.PassengersRepository>()),
+    );
+    gh.factory<_i328.AddExistingPassenger>(
+      () => _i328.AddExistingPassenger(gh<_i591.PassengersRepository>()),
+    );
+    gh.factory<_i328.ImportPassengers>(
+      () => _i328.ImportPassengers(gh<_i591.PassengersRepository>()),
+    );
+    gh.factory<_i328.UpdatePassenger>(
+      () => _i328.UpdatePassenger(gh<_i591.PassengersRepository>()),
+    );
+    gh.factory<_i328.UpdateBooking>(
+      () => _i328.UpdateBooking(gh<_i591.PassengersRepository>()),
+    );
+    gh.factory<_i328.RemoveBooking>(
+      () => _i328.RemoveBooking(gh<_i591.PassengersRepository>()),
+    );
+    gh.factory<_i395.SaveFlightAssignment>(
+      () => _i395.SaveFlightAssignment(gh<_i591.AssignmentsRepository>()),
+    );
+    gh.factory<_i395.SaveLodgingAssignment>(
+      () => _i395.SaveLodgingAssignment(gh<_i591.AssignmentsRepository>()),
+    );
+    gh.factory<_i395.RemoveAssignment>(
+      () => _i395.RemoveAssignment(gh<_i591.AssignmentsRepository>()),
+    );
+    gh.factory<_i395.BulkAssign>(
+      () => _i395.BulkAssign(gh<_i591.AssignmentsRepository>()),
     );
     gh.factory<_i649.LoginCubit>(() => _i649.LoginCubit(gh<_i1051.SignIn>()));
     gh.factory<_i687.ChangeTripStatus>(
