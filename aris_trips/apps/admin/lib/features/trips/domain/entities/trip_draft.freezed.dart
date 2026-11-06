@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TripDraft {
 
- String get name; String get destination; String? get description; DateTime get startDate; DateTime get endDate; TripStatus get status;
+ String get name; String get destination; String? get description; DateTime? get startDate; DateTime? get endDate; TripStatus get status;
 /// Create a copy of TripDraft
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,7 +51,7 @@ abstract mixin class $TripDraftCopyWith<$Res>  {
   factory $TripDraftCopyWith(TripDraft value, $Res Function(TripDraft) _then) = _$TripDraftCopyWithImpl;
 @useResult
 $Res call({
- String name, String destination, String? description, DateTime startDate, DateTime endDate, TripStatus status
+ String name, String destination, String? description, DateTime? startDate, DateTime? endDate, TripStatus status
 });
 
 
@@ -68,14 +68,14 @@ class _$TripDraftCopyWithImpl<$Res>
 
 /// Create a copy of TripDraft
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? destination = null,Object? description = freezed,Object? startDate = null,Object? endDate = null,Object? status = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? destination = null,Object? description = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? status = null,}) {
   return _then(TripDraft(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,destination: null == destination ? _self.destination : destination // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,startDate: null == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
-as DateTime,endDate: null == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
-as DateTime,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TripStatus,
   ));
 }
@@ -161,7 +161,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String destination,  String? description,  DateTime startDate,  DateTime endDate,  TripStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String destination,  String? description,  DateTime? startDate,  DateTime? endDate,  TripStatus status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TripDraft() when $default != null:
 return $default(_that.name,_that.destination,_that.description,_that.startDate,_that.endDate,_that.status);case _:
@@ -182,7 +182,7 @@ return $default(_that.name,_that.destination,_that.description,_that.startDate,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String destination,  String? description,  DateTime startDate,  DateTime endDate,  TripStatus status)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String destination,  String? description,  DateTime? startDate,  DateTime? endDate,  TripStatus status)  $default,) {final _that = this;
 switch (_that) {
 case _TripDraft():
 return $default(_that.name,_that.destination,_that.description,_that.startDate,_that.endDate,_that.status);case _:
@@ -202,7 +202,7 @@ return $default(_that.name,_that.destination,_that.description,_that.startDate,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String destination,  String? description,  DateTime startDate,  DateTime endDate,  TripStatus status)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String destination,  String? description,  DateTime? startDate,  DateTime? endDate,  TripStatus status)?  $default,) {final _that = this;
 switch (_that) {
 case _TripDraft() when $default != null:
 return $default(_that.name,_that.destination,_that.description,_that.startDate,_that.endDate,_that.status);case _:
@@ -217,14 +217,14 @@ return $default(_that.name,_that.destination,_that.description,_that.startDate,_
 
 
 class _TripDraft extends TripDraft {
-  const _TripDraft({required this.name, required this.destination, this.description, required this.startDate, required this.endDate, this.status = TripStatus.draft}): super._();
+  const _TripDraft({this.name = '', this.destination = '', this.description, this.startDate, this.endDate, this.status = TripStatus.draft}): super._();
   
 
-@override final  String name;
-@override final  String destination;
+@override@JsonKey() final  String name;
+@override@JsonKey() final  String destination;
 @override final  String? description;
-@override final  DateTime startDate;
-@override final  DateTime endDate;
+@override final  DateTime? startDate;
+@override final  DateTime? endDate;
 @override@JsonKey() final  TripStatus status;
 
 /// Create a copy of TripDraft
@@ -259,7 +259,7 @@ abstract mixin class _$TripDraftCopyWith<$Res> implements $TripDraftCopyWith<$Re
   factory _$TripDraftCopyWith(_TripDraft value, $Res Function(_TripDraft) _then) = __$TripDraftCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String destination, String? description, DateTime startDate, DateTime endDate, TripStatus status
+ String name, String destination, String? description, DateTime? startDate, DateTime? endDate, TripStatus status
 });
 
 
@@ -276,14 +276,14 @@ class __$TripDraftCopyWithImpl<$Res>
 
 /// Create a copy of TripDraft
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? destination = null,Object? description = freezed,Object? startDate = null,Object? endDate = null,Object? status = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? destination = null,Object? description = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? status = null,}) {
   return _then(_TripDraft(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,destination: null == destination ? _self.destination : destination // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,startDate: null == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
-as DateTime,endDate: null == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
-as DateTime,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TripStatus,
   ));
 }

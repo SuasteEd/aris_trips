@@ -47,7 +47,10 @@ class SupabaseTripsRemoteDataSource implements TripsRemoteDataSource {
 
     final search = query.search.replaceAll(_filterSyntax, ' ').trim();
     if (search.isNotEmpty) {
-      request = request.or('name.ilike.*$search*,destination.ilike.*$search*');
+      // Quoted so spaces and dots in the text stay part of the value.
+      request = request.or(
+        'name.ilike."*$search*",destination.ilike."*$search*"',
+      );
     }
 
     final rows = await request

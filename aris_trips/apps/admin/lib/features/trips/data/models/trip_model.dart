@@ -31,15 +31,16 @@ abstract class TripModel with _$TripModel {
   static const String columns =
       'id, name, destination, description, cover_path, start_date, end_date, status';
 
-  /// Insert/update payload for the editable fields.
+  /// Insert/update payload for the editable fields. The draft must be valid.
   static Map<String, dynamic> draftToJson(TripDraft draft) {
+    assert(draft.isValid, 'Only valid drafts reach the data layer');
     const dates = DateOnlyConverter();
     return {
       'name': draft.name,
       'destination': draft.destination,
       'description': draft.description,
-      'start_date': dates.toJson(draft.startDate),
-      'end_date': dates.toJson(draft.endDate),
+      'start_date': dates.toJson(draft.startDate!),
+      'end_date': dates.toJson(draft.endDate!),
       'status': draft.status.value,
     };
   }

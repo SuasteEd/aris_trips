@@ -221,8 +221,8 @@ return $default(_that.id,_that.name,_that.destination,_that.description,_that.co
 /// @nodoc
 
 
-class _Trip implements Trip {
-  const _Trip({required this.id, required this.name, required this.destination, this.description, this.coverPath, this.coverUrl, required this.startDate, required this.endDate, required this.status});
+class _Trip extends Trip {
+  const _Trip({required this.id, required this.name, required this.destination, this.description, this.coverPath, this.coverUrl, required this.startDate, required this.endDate, required this.status}): super._();
   
 
 @override final  String id;
