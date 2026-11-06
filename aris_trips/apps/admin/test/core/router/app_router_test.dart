@@ -1,22 +1,32 @@
 import 'dart:async';
 
 import 'package:aris_admin/app.dart';
-import 'package:aris_admin/core/router/app_router.dart';
 import 'package:aris_admin/core/error/failure.dart';
+import 'package:aris_admin/core/router/app_router.dart';
 import 'package:aris_admin/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:aris_admin/features/auth/presentation/cubit/session_cubit.dart';
+import 'package:aris_admin/features/trips/domain/entities/trips_query.dart';
+import 'package:aris_admin/features/trips/presentation/cubit/trips_list_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../helpers/auth_fakes.dart';
+import '../../helpers/pump_app.dart';
+import '../../helpers/trips_fakes.dart';
 
 void main() {
+  setUpAll(initFormatting);
+
   group('sessionRedirect', () {
     const authenticated = SessionState.authenticated(testAdmin);
 
     test('unknown and failure go to splash', () {
-      expect(sessionRedirect(const SessionState.unknown(), '/'), '/splash');
+      expect(
+        sessionRedirect(const SessionState.unknown(), '/trips'),
+        '/splash',
+      );
       expect(
         sessionRedirect(
           const SessionState.failure(Failure.network()),
@@ -27,40 +37,55 @@ void main() {
       expect(sessionRedirect(const SessionState.unknown(), '/splash'), isNull);
     });
 
-    test('unauthenticated goes to login', () {
-      expect(
-        sessionRedirect(const SessionState.unauthenticated(), '/'),
-        '/login',
-      );
-      expect(
-        sessionRedirect(const SessionState.unauthenticated(), '/splash'),
-        '/login',
-      );
+    test('unauthenticated goes to login from anywhere', () {
+      for (final location in ['/', '/trips', '/trips/abc/edit', '/splash']) {
+        expect(
+          sessionRedirect(const SessionState.unauthenticated(), location),
+          '/login',
+        );
+      }
       expect(
         sessionRedirect(const SessionState.unauthenticated(), '/login'),
         isNull,
       );
     });
 
-    test('authenticated leaves login and splash for home', () {
-      expect(sessionRedirect(authenticated, '/login'), '/');
-      expect(sessionRedirect(authenticated, '/splash'), '/');
-      expect(sessionRedirect(authenticated, '/'), isNull);
+    test('authenticated lands on trips and keeps deep links', () {
+      expect(sessionRedirect(authenticated, '/login'), '/trips');
+      expect(sessionRedirect(authenticated, '/splash'), '/trips');
+      expect(sessionRedirect(authenticated, '/'), '/trips');
+      expect(sessionRedirect(authenticated, '/trips'), isNull);
+      expect(sessionRedirect(authenticated, '/trips/abc'), isNull);
     });
   });
 
   group('router', () {
     late MockSessionCubit session;
     late StreamController<SessionState> states;
+    late GetIt locator;
 
     setUp(() {
       session = MockSessionCubit();
       states = StreamController<SessionState>.broadcast();
       when(() => session.stream).thenAnswer((_) => states.stream);
-      when(() => session.signOut()).thenAnswer((_) async {});
+
+      final login = MockLoginCubit();
+      when(() => login.state).thenReturn(const LoginState.initial());
+      final trips = MockTripsListCubit();
+      when(() => trips.state).thenReturn(
+        TripsListState.loaded(query: const TripsQuery(), trips: [testTrip]),
+      );
+      when(() => trips.load()).thenAnswer((_) async {});
+
+      locator = GetIt.asNewInstance()
+        ..registerFactory<LoginCubit>(() => login)
+        ..registerFactory<TripsListCubit>(() => trips);
     });
 
-    tearDown(() => states.close());
+    tearDown(() async {
+      await states.close();
+      await locator.reset();
+    });
 
     void setState(SessionState state) {
       when(() => session.state).thenReturn(state);
@@ -68,21 +93,16 @@ void main() {
     }
 
     Future<void> pumpApp(WidgetTester tester) async {
-      final login = MockLoginCubit();
-      when(() => login.state).thenReturn(const LoginState.initial());
       await tester.pumpWidget(
         AdminApp(
           session: session,
-          router: createRouter(
-            session: session,
-            loginCubitFactory: () => login,
-          ),
+          router: createRouter(session: session, locator: locator),
         ),
       );
       await tester.pump();
     }
 
-    testWidgets('follows the session from splash to login to home', (
+    testWidgets('follows the session from splash to login to trips', (
       tester,
     ) async {
       when(() => session.state).thenReturn(const SessionState.unknown());
@@ -95,19 +115,24 @@ void main() {
 
       setState(const SessionState.authenticated(testAdmin));
       await tester.pumpAndSettle();
-      expect(find.text('Hola, Ana Admin'), findsOneWidget);
-      final context = tester.element(find.text('Hola, Ana Admin'));
+      expect(find.text('Viajes'), findsOneWidget);
+      expect(find.text('Cancún Primavera 2027'), findsOneWidget);
+      final context = tester.element(find.text('Viajes'));
       expect(Localizations.localeOf(context).toString(), 'es_MX');
     });
 
-    testWidgets('sign out button asks the session to sign out', (tester) async {
+    testWidgets('signing out from trips returns to login', (tester) async {
+      when(() => session.signOut()).thenAnswer((_) async {
+        setState(const SessionState.unauthenticated());
+      });
       when(() => session.state)
           .thenReturn(const SessionState.authenticated(testAdmin));
       await pumpApp(tester);
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const Key('sign_out')));
-      verify(() => session.signOut()).called(1);
+      await tester.pumpAndSettle();
+      expect(find.text('Iniciar sesión'), findsOneWidget);
     });
 
     testWidgets('a failed session check offers a retry', (tester) async {
