@@ -29,6 +29,22 @@ import 'package:aris_admin/features/auth/presentation/cubit/login_cubit.dart'
     as _i649;
 import 'package:aris_admin/features/auth/presentation/cubit/session_cubit.dart'
     as _i893;
+import 'package:aris_admin/features/trips/data/datasources/trips_remote_data_source.dart'
+    as _i78;
+import 'package:aris_admin/features/trips/data/repositories/trips_repository_impl.dart'
+    as _i865;
+import 'package:aris_admin/features/trips/domain/repositories/trips_repository.dart'
+    as _i182;
+import 'package:aris_admin/features/trips/domain/usecases/change_trip_status.dart'
+    as _i687;
+import 'package:aris_admin/features/trips/domain/usecases/get_trip.dart'
+    as _i668;
+import 'package:aris_admin/features/trips/domain/usecases/get_trips.dart'
+    as _i651;
+import 'package:aris_admin/features/trips/domain/usecases/save_trip.dart'
+    as _i264;
+import 'package:aris_admin/features/trips/domain/usecases/set_trip_cover.dart'
+    as _i622;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:supabase_flutter/supabase_flutter.dart' as _i454;
@@ -42,6 +58,9 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final supabaseModule = _$SupabaseModule();
     gh.lazySingleton<_i454.SupabaseClient>(() => supabaseModule.client);
+    gh.lazySingleton<_i78.TripsRemoteDataSource>(
+      () => _i78.SupabaseTripsRemoteDataSource(gh<_i454.SupabaseClient>()),
+    );
     gh.lazySingleton<_i860.AuthRemoteDataSource>(
       () => _i860.SupabaseAuthRemoteDataSource(gh<_i454.SupabaseClient>()),
     );
@@ -56,6 +75,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i111.WatchSignedOut>(
       () => _i111.WatchSignedOut(gh<_i616.AuthRepository>()),
     );
+    gh.lazySingleton<_i182.TripsRepository>(
+      () => _i865.TripsRepositoryImpl(gh<_i78.TripsRemoteDataSource>()),
+    );
     gh.lazySingleton<_i893.SessionCubit>(
       () => _i893.SessionCubit(
         gh<_i233.GetCurrentAdmin>(),
@@ -64,6 +86,19 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i649.LoginCubit>(() => _i649.LoginCubit(gh<_i1051.SignIn>()));
+    gh.factory<_i687.ChangeTripStatus>(
+      () => _i687.ChangeTripStatus(gh<_i182.TripsRepository>()),
+    );
+    gh.factory<_i668.GetTrip>(() => _i668.GetTrip(gh<_i182.TripsRepository>()));
+    gh.factory<_i651.GetTrips>(
+      () => _i651.GetTrips(gh<_i182.TripsRepository>()),
+    );
+    gh.factory<_i264.SaveTrip>(
+      () => _i264.SaveTrip(gh<_i182.TripsRepository>()),
+    );
+    gh.factory<_i622.SetTripCover>(
+      () => _i622.SetTripCover(gh<_i182.TripsRepository>()),
+    );
     return this;
   }
 }
